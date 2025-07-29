@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class GeneratePdfInfo {
+public class GeneratePlaywrightInfo {
 
     private String url;
 

@@ -25,7 +25,7 @@ public class PlaywrightService implements PlaywrightUseCase{
 
 
     @Override
-    public byte[] generatePdf(PlaywrightCommand command) {
+    public byte[] generatePng(PlaywrightCommand command) {
         long startTime = System.nanoTime();
         try (
                 Playwright playwright = Playwright.create();
@@ -43,20 +43,20 @@ public class PlaywrightService implements PlaywrightUseCase{
                     .setSameSite(SameSiteAttribute.NONE);
             context.addCookies(List.of(cookie));
 
-            log.info("[PDF] Playwright 초기화 완료. ({} ms)", elapsed(startTime));
+            log.info("[PNG] Playwright 초기화 완료. ({} ms)", elapsed(startTime));
 
             long navStart = System.nanoTime();
             page.navigate(command.getUrl());
-            log.info("[PDF] 페이지 네비게이션 완료. ({} ms)", elapsed(navStart));
+            log.info("[PNG] 페이지 네비게이션 완료. ({} ms)", elapsed(navStart));
 
             long loadStart = System.nanoTime();
             page.waitForLoadState(LoadState.DOMCONTENTLOADED);
-            log.info("[PDF] 페이지 로드 완료. ({} ms)", elapsed(loadStart));
+            log.info("[PNG] 페이지 로드 완료. ({} ms)", elapsed(loadStart));
 
-            page.waitForTimeout(5000);
-            log.info("[PDF] waitForTimeout(2000) 완료");
+            page.waitForTimeout(4000);
+            log.info("[PNG] waitForTimeout(2000) 완료");
 
-            long pdfGenStart = System.nanoTime();
+            long pngGenStart = System.nanoTime();
             byte[] pngBytes = page.screenshot(
                     new ScreenshotOptions()
                             .setType(ScreenshotType.PNG)
@@ -64,11 +64,8 @@ public class PlaywrightService implements PlaywrightUseCase{
                             .setOmitBackground(false)
                             .setClip(0, 0, command.getWidth(), command.getHeight())
             );
-//            byte[] pdfBytes = page.pdf(new Page.PdfOptions()
-//                    .setPrintBackground(true)
-//                    .setWidth(command.getWidth() + "px")
-//                    .setHeight(command.getHeight() + "px"));
-            log.info("[PDF] PDF 생성 완료. ({} ms)", elapsed(pdfGenStart));
+
+            log.info("[PNG] PNG 생성 완료. ({} ms)", elapsed(pngGenStart));
 
             return pngBytes;
         }

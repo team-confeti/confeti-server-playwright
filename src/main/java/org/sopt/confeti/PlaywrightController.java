@@ -27,7 +27,7 @@ public class PlaywrightController {
     @PostMapping("/generate")
     public ResponseEntity<Resource> generate(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken,
-            @RequestBody GeneratePdfInfo generatePdfInfo
+            @RequestBody GeneratePlaywrightInfo generatePlaywrightInfo
     ) {
         if (!accessToken.startsWith("Bearer ")) {
             return ResponseEntity.status(401)
@@ -37,14 +37,14 @@ public class PlaywrightController {
         log.info("Access Token : {}", accessToken);
 
         PlaywrightCommand command = PlaywrightCommand.builder()
-                .url(generatePdfInfo.getUrl())
+                .url(generatePlaywrightInfo.getUrl())
                 .accessToken(accessToken)
-                .width(generatePdfInfo.getWidth())
-                .height(generatePdfInfo.getHeight())
+                .width(generatePlaywrightInfo.getWidth())
+                .height(generatePlaywrightInfo.getHeight())
                 .build();
 
         String filename = "output.pdf";
-        byte[] pdfBytes = playwrightUseCase.generatePdf(command);
+        byte[] pdfBytes = playwrightUseCase.generatePng(command);
 
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(pdfBytes);
         InputStreamResource resource = new InputStreamResource(byteArrayInputStream);
